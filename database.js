@@ -75,13 +75,24 @@ await db.run(`
     console.log('O problema do id 3 foi resolvido')
 
 await db.run(`
-    DELETE from incidentes
+    DELETE FROM incidentes
     WHERE status_resolucao = 'Resolvido'
     `)
+await db.run(`
+    DELETE FROM incidentes
+    WHERE tipo_problema = 'Assalto'
+    `)
+    
     console.log('Status Resolvido removido com sucesso!')
 
     console.log("-------------RELATÓRIO FINAL----------------")
     const resultadoFinal = await db.all(`SELECT * FROM incidentes`)
     console.log(resultadoFinal)
+
+    return db; // a função criarBanco agora entraga a "chave" do banco
+
 }
-criarBanco()        
+
+module.exports = { criarBanco }
+//o module.export cria uma ponte de que permite compartilhar funções  entre arquivos
+//neste caso ele exporta a função 'criarBanco'
