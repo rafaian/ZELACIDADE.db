@@ -1,10 +1,14 @@
-const express = require("express")
+const express = require('express')
 
-const { criarBanco } = require("./database")
+const { criarBanco } = require('./database')
+
+const cors = require('cors')//importando pacote de gerenciamento de permissões
 
 const app = express()
 
 app.use(express.json())
+
+app.use(cors())//ativando o cors no nosso servidor o comando app.use(cors()) avisa ao navegador 'pode liberar o acesso para qualquer site que queira consultar meus dados'
 
 app.get("/", (req, res) => {
   res.send(`
@@ -16,18 +20,12 @@ app.get("/", (req, res) => {
         `)
 })
 
-const PORT = 3000
-
-
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta http://localhost:${PORT}`);
-})
 
 app.get('/incidentes', async (req, res) => {
-
-    const db = await criarBanco()
-    const listaIncidentes = await db.all(`SELECT * FROM incidentes`)
-    res.json(listaIncidentes)
+  
+  const db = await criarBanco()
+  const listaIncidentes = await db.all(`SELECT * FROM incidentes`)
+  res.json(listaIncidentes)
   })
 
    app.get('/incidentes/:id', async(req,res)=>{
@@ -81,3 +79,9 @@ app.get('/incidentes', async (req, res) => {
   })
 
   
+  const PORT = process.env.PORT || 3000
+  
+  
+  app.listen(PORT, () => {
+      console.log(`Servidor rodando na porta http://localhost:${PORT}`);
+  })
